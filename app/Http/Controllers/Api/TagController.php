@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\StoreCategoryRequest;
-use App\Http\Requests\Api\updateCategoryRequest;
-use App\Http\Resources\CategoryResource;
-use App\Services\CategoryService;
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
+use App\Http\Resources\TagResource;
+use App\Services\TagService;
 use App\Traits\ApiResponseHelper;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class TagController extends Controller
 {
     use ApiResponseHelper;
-    private $category;
-    public function __construct(CategoryService $category)
+    private $tag;
+    public function __construct(TagService $tag)
     {
-        $this->category = $category;
+        $this->tag = $tag;
     }
 
     /**
@@ -26,10 +26,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $allCategories = $this->category->index();
-        if (!empty($allCategories))
+        $tags = $this->tag->index();
+        if(!empty($tags))
         {
-            return $this->sendSuccess("success",CategoryResource::collection($allCategories));
+            return $this->sendSuccess("success" , TagResource::collection($tags));
         }
         return $this->sendSuccess("no data" , []);
     }
@@ -40,10 +40,10 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreTagRequest $request)
     {
-        $category = $this->category->store($request->all());
-        return $this->sendSuccess("category added successfully" , new CategoryResource($category));
+        $tag = $this->tag->store($request->all());
+        return $this->sendSuccess("added succssfully" , new TagResource($tag));
     }
 
     /**
@@ -54,8 +54,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = $this->category->get($id);
-        return $this->sendSuccess("success" , new CategoryResource($category));
+        $tag = $this->tag->get($id);
+        return $this->sendSuccess("success" , new TagResource($tag));
     }
     /**
      * Update the specified resource in storage.
@@ -64,10 +64,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(updateCategoryRequest $request, $id)
+    public function update(UpdateTagRequest $request, $id)
     {
-        $category = $this->category->update($request->all(), $id);
-        return $this->sendSuccess("updated successfully" , new CategoryResource($category));
+        $tag = $this->tag->update($request->all() , $id);
+        return $this->sendSuccess("updated successfully" , new TagResource($tag));
     }
 
     /**
@@ -78,7 +78,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = $this->category->destroy($id);
+        $tag = $this->tag->destroy($id);
         return $this->sendSuccess("deleted successfully" , null);
     }
 }
